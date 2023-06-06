@@ -130,3 +130,9 @@ if __name__ == '__main__':
     model = ViT(num_head=12, num_layers=12, num_classes=10, image_size=224,
              patch_size=16, hidden_dim=768, mlp_dim=3072, dropout=0.1, attention_dropout=0.1)
     print(model(x).shape)
+    print(f'Trainable parameters = {sum(p.numel() for p in model.parameters() if p.requires_grad)}')
+
+    state_dict = torch.load('../weights/vit_b_16-c867db91.pth')
+    for k, v in state_dict.items():
+        print(k, v.shape)
+    
