@@ -1,5 +1,5 @@
 model : vit_b_16
-dataset : /work/GDL/data/Galaxy10_DECals_mo.h5
+dataset : /work/GDL/data/Galaxy10_DECals.h5
 
 parameters :
   lr : 1.0e-2
