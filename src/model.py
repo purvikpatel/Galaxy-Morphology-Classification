@@ -3,6 +3,7 @@ import torch.nn as nn
 from einops.layers.torch import Rearrange
 from einops import repeat
 import torch.nn.functional as F
+import torchvision
 
 
 class PatchEmbedding(nn.Module):
@@ -125,14 +126,21 @@ class ViT(nn.Module):
         return x
 
 
+class VitPreTrained(nn.Module):
+    def __init__(self, num_classes: int):
+        super(VitPreTrained, self).__init__()
+        self.num_classes = num_classes
+        self.vit = torchvision.models.vit_b_16(weights='ViT_B_16_Weights.IMAGENET1K_V1')
+        self.vit.heads = nn.Linear(self.vit.hidden_dim, num_classes)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.vit(x)
+        return x
+
+
 if __name__ == '__main__':
     x = torch.randn(1, 3, 224, 224)
-    model = ViT(num_head=12, num_layers=12, num_classes=10, image_size=224,
-             patch_size=16, hidden_dim=768, mlp_dim=3072, dropout=0.1, attention_dropout=0.1)
-    print(model(x).shape)
+    model =  VitPreTrained(10)
     print(f'Trainable parameters = {sum(p.numel() for p in model.parameters() if p.requires_grad)}')
-
-    state_dict = torch.load('../weights/vit_b_16-c867db91.pth')
-    for k, v in state_dict.items():
-        print(k, v.shape)
+    print(model(x).shape)
     

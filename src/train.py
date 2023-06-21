@@ -17,7 +17,7 @@ from torchvision import transforms
 from dataset import Galaxy10DECals
 from tqdm import tqdm
 import random
-from model import ViT
+from model import VitPreTrained
 from typing import Any
 
 
@@ -182,8 +182,7 @@ def plot_predictions(eval_loader: DataLoader, model: nn.Module):
         
 
 def main(config):
-    model = ViT(num_head=12, num_layers=12, num_classes=10, image_size=224,
-             patch_size=16, hidden_dim=768, mlp_dim=3072, dropout=0.1, attention_dropout=0.1)
+    model = VitPreTrained(num_classes=10) 
     params_to_optimize = [p for p in model.parameters() if p.requires_grad]
     optimizer = optim.AdamW(params_to_optimize, lr = config['parameters']['lr'], 
                             weight_decay = config['parameters']['weight_decay'])
